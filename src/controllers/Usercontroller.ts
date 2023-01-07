@@ -8,6 +8,10 @@ import jwt from "jsonwebtoken"
 
 export class UserController {
 
+    async index(req: Request,res: Response) {
+        return res.json("Sistema de cadastro e login, Pedro Henrique")
+    }
+
     async cadastre(req: Request,res: Response) {
         const {name, email, password} = req.body
 
