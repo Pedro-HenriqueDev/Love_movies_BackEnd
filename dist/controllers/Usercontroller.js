@@ -34,6 +34,9 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const nodemailer = __importStar(require("nodemailer"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserController {
+    async index(req, res) {
+        return res.json("Sistema de cadastro e login, Pedro Henrique");
+    }
     async cadastre(req, res) {
         var _a;
         const { name, email, password } = req.body;

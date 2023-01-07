@@ -6,6 +6,7 @@ const RecoveryController_1 = require("./controllers/RecoveryController");
 const Usercontroller_1 = require("./controllers/Usercontroller");
 const authMiddleware_1 = require("./middlewares/authMiddleware");
 const routes = (0, express_1.Router)();
+routes.get("/", new Usercontroller_1.UserController().index);
 routes.post("/user", new Usercontroller_1.UserController().cadastre);
 routes.get("/completeregistration/:token", authMiddleware_1.authMiddlewareEmailVerification, new Usercontroller_1.UserController().completeRegistration);
 routes.post("/login", new LoginController_1.LoginSistem().login);

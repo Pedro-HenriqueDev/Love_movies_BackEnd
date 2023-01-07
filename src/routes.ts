@@ -6,6 +6,7 @@ import { authMiddleware, authMiddlewareParam, authMiddlewareEmailVerification } 
 
 const routes = Router()
 
+routes.get("/", new UserController().index)
 routes.post("/user", new UserController().cadastre)
 routes.get("/completeregistration/:token",authMiddlewareEmailVerification, new UserController().completeRegistration)
 
