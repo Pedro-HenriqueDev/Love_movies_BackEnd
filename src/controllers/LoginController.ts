@@ -11,13 +11,13 @@ export class LoginSistem {
         const user = await UserRepository.findOneBy({email})
 
         if(!user) {
-            throw new BadRequestError("Email ou senha invalidos")
+            throw new BadRequestError("Invalid email or password")
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
 
         if(!verifyPass) {
-            throw new BadRequestError("Email ou senha invalidos")
+            throw new BadRequestError("Invalid email or password")
         }
         
         const token = jwt.sign({id: user.id}, process.env.JWT_PASS ?? '', {expiresIn: '2d'})
