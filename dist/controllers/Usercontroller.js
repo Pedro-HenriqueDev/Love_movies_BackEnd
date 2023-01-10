@@ -35,14 +35,14 @@ const nodemailer = __importStar(require("nodemailer"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserController {
     async index(req, res) {
-        return res.json("Sistema de cadastro e login, Pedro Henrique");
+        return res.json("Welcome, Registration and login system, Pedro Henrique");
     }
     async cadastre(req, res) {
         var _a;
         const { name, email, password } = req.body;
         const userExist = await UserRepositories_1.UserRepository.findOneBy({ email });
         if (userExist) {
-            throw new api_erros_1.BadRequestError("Email ja existe");
+            throw new api_erros_1.BadRequestError("Email already exists");
         }
         const hashPassword = await bcrypt_1.default.hash(password, 10);
         const user = { name, email, password: hashPassword };
@@ -50,16 +50,32 @@ class UserController {
         let transport = nodemailer.createTransport(config_1.configMail);
         await transport.sendMail((0, config_1.mailVerification)(email, token)).then((result) => {
             console.log(result);
-            return res.json("Um email de verificaçao foi enviado para o seu email");
-        }).catch((err) => {
-            console.log(err);
-            return res.status(500).json("Ocorreu um erro interno");
+            return res.json("A verification email has been sent to your email");
         });
     }
     async completeRegistration(req, res) {
         const user = req.user;
         await UserRepositories_1.UserRepository.save(user);
-        return res.json("Conta criada!");
+        return res.status(201).json("Account created!");
+    }
+    async getUsers(req, res) {
+        const users = await UserRepositories_1.UserRepository.find({ select: { id: true, email: true, name: true } });
+        return res.json(users);
+    }
+    async deleteUser(req, res) {
+        const userId = req.user.id;
+        const password = req.body.password;
+        const user = await UserRepositories_1.UserRepository.findOneBy({ id: userId });
+        if (!user) {
+            throw new api_erros_1.BadRequestError("User does not exist");
+        }
+        const verifyPass = await bcrypt_1.default.compare(password, user.password);
+        if (!verifyPass) {
+            throw new api_erros_1.BadRequestError("Invalid password");
+        }
+        await UserRepositories_1.UserRepository.remove(user);
+        const { password: _, ...userDeleted } = user;
+        return res.json({ user: userDeleted, message: "User deleted successfully" });
     }
 }
 exports.UserController = UserController;

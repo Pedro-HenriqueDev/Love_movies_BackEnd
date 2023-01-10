@@ -11,13 +11,13 @@ const authMiddleware = async (req, res, next) => {
     var _a;
     const { authorization } = req.headers;
     if (!authorization) {
-        throw new api_erros_1.UnauthorizedError("Nao autorizado");
+        throw new api_erros_1.UnauthorizedError("Not authorized");
     }
     const token = authorization.split(" ")[2];
     const { id } = jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '');
     const user = await UserRepositories_1.UserRepository.findOneBy({ id });
     if (!user) {
-        throw new api_erros_1.UnauthorizedError("Nao autorizado");
+        throw new api_erros_1.UnauthorizedError("Not authorized");
     }
     const { password: _, ...loggeedUser } = user;
     req.user = loggeedUser;
@@ -28,12 +28,12 @@ const authMiddlewareParam = async (req, res, next) => {
     var _a;
     const token = req.params.token;
     if (!token) {
-        throw new api_erros_1.UnauthorizedError("Nao autorizado");
+        throw new api_erros_1.UnauthorizedError("Not authorized");
     }
     const { email } = jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '');
     const user = await UserRepositories_1.UserRepository.findOneBy({ email });
     if (!user) {
-        throw new api_erros_1.UnauthorizedError("Nao autorizado");
+        throw new api_erros_1.UnauthorizedError("Not authorized");
     }
     req.user = user;
     next();
@@ -43,12 +43,12 @@ const authMiddlewareEmailVerification = async (req, res, next) => {
     var _a;
     const token = req.params.token;
     if (!token) {
-        throw new api_erros_1.UnauthorizedError("Nao autorizado");
+        throw new api_erros_1.UnauthorizedError("Not authorized");
     }
     const { name, email, password } = jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '');
     const userExist = await UserRepositories_1.UserRepository.findOneBy({ email });
     if (userExist) {
-        throw new api_erros_1.BadRequestError("Email ja esta cadastrado");
+        throw new api_erros_1.BadRequestError("Email is already registered");
     }
     req.user = { name, email, password };
     next();
