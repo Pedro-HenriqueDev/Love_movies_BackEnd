@@ -45,4 +45,34 @@ export class UserController {
         return res.json("Conta criada!")
     }
 
+    async getUsers(req: Request,res: Response) {
+        const users = await UserRepository.find({select: {id: true, email: true, name: true}})
+        
+        return res.json(users)
+    }
+
+    async deleteUser(req: Request,res: Response) {
+        const userId = req.user.id
+        const password = req.body.password
+
+        const user = await UserRepository.findOneBy({id: userId})
+
+        if(!user){
+            throw new BadRequestError("Usuario nao existe")
+        }
+
+        const verifyPass = await bcrypt.compare(password, user.password)
+
+        if(!verifyPass) {
+            throw new BadRequestError("Senha invalida")
+        }
+
+        await UserRepository.remove(user)
+
+        const {password:_, ...userDeleted} = user
+
+        return res.json({user: userDeleted, message: "Usuario deletado com sucesso"})
+        
+    }
+
 }

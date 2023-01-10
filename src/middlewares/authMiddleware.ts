@@ -23,7 +23,7 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
         const token = authorization.split(" ")[2]
 
         const {id} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtPayload
-
+        
         const user = await UserRepository.findOneBy({id})
 
         if(!user) {
