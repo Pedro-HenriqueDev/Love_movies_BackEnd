@@ -9,7 +9,7 @@ import jwt from "jsonwebtoken"
 export class UserController {
 
     async index(req: Request,res: Response) {
-        return res.json("Sistema de cadastro e login, Pedro Henrique")
+        return res.json("Welcome, Registration and login system, Pedro Henrique")
     }
 
     async cadastre(req: Request,res: Response) {
@@ -18,7 +18,7 @@ export class UserController {
         const userExist = await UserRepository.findOneBy({email})
 
         if(userExist) {
-            throw new BadRequestError("Email ja existe")
+            throw new BadRequestError("Email already exists")
         }
         const hashPassword = await bcrypt.hash(password, 10)
         const user = {name, email, password: hashPassword}
@@ -29,10 +29,7 @@ export class UserController {
 
         await transport.sendMail(mailVerification(email, token)).then((result) => {
             console.log(result)
-            return res.json("Um email de verificaçao foi enviado para o seu email")
-        }).catch((err) => {
-            console.log(err)
-            return res.status(500).json("Ocorreu um erro interno")
+            return res.json("A verification email has been sent to your email")
         })
 
     }
@@ -42,7 +39,7 @@ export class UserController {
         
         await UserRepository.save(user)
         
-        return res.json("Conta criada!")
+        return res.status(201).json("Account created!")
     }
 
     async getUsers(req: Request,res: Response) {
@@ -58,20 +55,20 @@ export class UserController {
         const user = await UserRepository.findOneBy({id: userId})
 
         if(!user){
-            throw new BadRequestError("Usuario nao existe")
+            throw new BadRequestError("User does not exist")
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
 
         if(!verifyPass) {
-            throw new BadRequestError("Senha invalida")
+            throw new BadRequestError("Invalid password")
         }
 
         await UserRepository.remove(user)
 
         const {password:_, ...userDeleted} = user
 
-        return res.json({user: userDeleted, message: "Usuario deletado com sucesso"})
+        return res.json({user: userDeleted, message: "User deleted successfully"})
         
     }
 

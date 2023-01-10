@@ -18,7 +18,7 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
     const {authorization} = req.headers
         
         if(!authorization) {
-            throw new UnauthorizedError("Nao autorizado")
+            throw new UnauthorizedError("Not authorized")
         }
         const token = authorization.split(" ")[2]
 
@@ -27,7 +27,7 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
         const user = await UserRepository.findOneBy({id})
 
         if(!user) {
-            throw new UnauthorizedError("Nao autorizado")
+            throw new UnauthorizedError("Not authorized")
         }
         const {password:_,...loggeedUser} = user
         
@@ -39,7 +39,7 @@ export const authMiddlewareParam = async (req: Request,res: Response, next: Next
     const token = req.params.token
         
         if(!token) {
-            throw new UnauthorizedError("Nao autorizado")
+            throw new UnauthorizedError("Not authorized")
         }
 
         const {email} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtPayload
@@ -47,7 +47,7 @@ export const authMiddlewareParam = async (req: Request,res: Response, next: Next
         const user = await UserRepository.findOneBy({email})
 
         if(!user) {
-            throw new UnauthorizedError("Nao autorizado")
+            throw new UnauthorizedError("Not authorized")
         }
         
         req.user = user
@@ -58,7 +58,7 @@ export const authMiddlewareEmailVerification = async (req: Request,res: Response
     const token = req.params.token
         
         if(!token) {
-            throw new UnauthorizedError("Nao autorizado")
+            throw new UnauthorizedError("Not authorized")
         }
 
         const {name, email, password} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtVerificationPayload
@@ -66,7 +66,7 @@ export const authMiddlewareEmailVerification = async (req: Request,res: Response
         const userExist = await UserRepository.findOneBy({email})
 
         if(userExist) {
-            throw new BadRequestError("Email ja esta cadastrado")
+            throw new BadRequestError("Email is already registered")
         }
 
         req.user = {name, email, password}
