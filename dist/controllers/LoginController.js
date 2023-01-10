@@ -14,11 +14,11 @@ class LoginSistem {
         const { email, password } = req.body;
         const user = await UserRepositories_1.UserRepository.findOneBy({ email });
         if (!user) {
-            throw new api_erros_1.BadRequestError("Email ou senha invalidos");
+            throw new api_erros_1.BadRequestError("Invalid email or password");
         }
         const verifyPass = await bcrypt_1.default.compare(password, user.password);
         if (!verifyPass) {
-            throw new api_erros_1.BadRequestError("Email ou senha invalidos");
+            throw new api_erros_1.BadRequestError("Invalid email or password");
         }
         const token = jsonwebtoken_1.default.sign({ id: user.id }, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', { expiresIn: '2d' });
         const { password: _, ...userLogin } = user;

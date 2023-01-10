@@ -39,16 +39,13 @@ class RecoveryPassword {
         const { email } = req.body;
         const user = await UserRepositories_1.UserRepository.findOneBy({ email });
         if (!user) {
-            throw new api_erros_1.BadRequestError("Email nao encontrado");
+            throw new api_erros_1.BadRequestError("email not found");
         }
         const token = jsonwebtoken_1.default.sign({ email: user.email }, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', { expiresIn: '1h' });
         let transport = nodemailer.createTransport(config_1.configMail);
         await transport.sendMail((0, config_1.mailContent)(email, token)).then((result) => {
             console.log(result);
-            return res.json("Link de recuperaçao enviado para o seu Email");
-        }).catch((err) => {
-            console.log(err);
-            return res.status(500).json("Ocorreu um erro interno");
+            return res.json("Recovery link sent to your email");
         });
     }
     async recoveryPassword(req, res) {
@@ -56,11 +53,11 @@ class RecoveryPassword {
         const newPass = req.body.password;
         const hash = await bcrypt_1.default.hash(newPass, 10);
         if (!user) {
-            throw new api_erros_1.BadRequestError("Email nao encontrado");
+            throw new api_erros_1.BadRequestError("email not found");
         }
         user.password = hash;
         await UserRepositories_1.UserRepository.save(user);
-        return res.json("Ok, sua senha foi alterada");
+        return res.json("Ok, your password has been changed");
     }
 }
 exports.RecoveryPassword = RecoveryPassword;
