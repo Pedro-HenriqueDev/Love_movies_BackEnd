@@ -3,14 +3,16 @@ import { LoginSistem } from './controllers/LoginController'
 import { RecoveryPassword } from './controllers/RecoveryController'
 import { UserController } from './controllers/Usercontroller'
 import { authMiddleware, authMiddlewareParam, authMiddlewareEmailVerification } from "./middlewares/authMiddleware"
+import {celebrate} from 'celebrate'
+import { formUserValidator } from './helpers/ValidatorFormUser'
 
 const routes = Router()
 
 routes.get("/users", new UserController().getUsers)
 
 routes.get("/", new UserController().index)
-routes.post("/users", new UserController().cadastre)
-routes.get("/completeregistration/:token",authMiddlewareEmailVerification, new UserController().completeRegistration)
+routes.post("/users",celebrate(formUserValidator), new UserController().cadastre)
+routes.get("/completeregistration/:token",celebrate(formUserValidator),authMiddlewareEmailVerification, new UserController().completeRegistration)
 
 routes.post("/login", new LoginSistem().login)
 routes.get("/profile",authMiddleware, new LoginSistem().getProfile)
