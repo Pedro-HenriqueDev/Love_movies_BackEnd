@@ -1,9 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Users_Movies } from "./Users_Movies";
 
 @Entity("users")
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+    @PrimaryGeneratedColumn("uuid")
+    id: string
 
     @Column({nullable: false, type: "text"})
     name: string
@@ -13,4 +14,7 @@ export class User {
 
     @Column({type: "text"})
     password: string
+
+    @OneToMany(() => Users_Movies, movies => movies.user_id)
+    movies: Users_Movies[]
 }

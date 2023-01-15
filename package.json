@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
+    "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",

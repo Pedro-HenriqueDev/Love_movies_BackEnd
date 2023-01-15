@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { BadRequestError, UnauthorizedError } from "../helpers/api-erros";
 import { UserRepository } from "../repositories/UserRepositories";
 import jwt from "jsonwebtoken"
+import { CelebrateError } from "celebrate";
 
 type jwtPayload = {
-    id?: number
+    id?: string
     email?: string
 }
 
@@ -71,4 +72,18 @@ export const authMiddlewareEmailVerification = async (req: Request,res: Response
 
         req.user = {name, email, password}
         next()
+}
+
+export const celebrateErrorValidator = async(err: Error ,req: Request, res: Response, next: NextFunction) => {
+    if(err instanceof CelebrateError) {
+        const errorBody = err.details.get('body')
+        return res.status(400).json({
+            message: errorBody?.message
+        })
+    }
+
+    return res.status(500).json({
+        status: "Error",
+        message: "Internal Server Error"
+    })
 }
