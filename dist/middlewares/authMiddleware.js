@@ -3,10 +3,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddlewareEmailVerification = exports.authMiddlewareParam = exports.authMiddleware = void 0;
+exports.celebrateErrorValidator = exports.authMiddlewareEmailVerification = exports.authMiddlewareParam = exports.authMiddleware = void 0;
 const api_erros_1 = require("../helpers/api-erros");
 const UserRepositories_1 = require("../repositories/UserRepositories");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const celebrate_1 = require("celebrate");
 const authMiddleware = async (req, res, next) => {
     var _a;
     const { authorization } = req.headers;
@@ -54,3 +55,16 @@ const authMiddlewareEmailVerification = async (req, res, next) => {
     next();
 };
 exports.authMiddlewareEmailVerification = authMiddlewareEmailVerification;
+const celebrateErrorValidator = async (err, req, res, next) => {
+    if (err instanceof celebrate_1.CelebrateError) {
+        const errorBody = err.details.get('body');
+        return res.status(400).json({
+            message: errorBody === null || errorBody === void 0 ? void 0 : errorBody.message
+        });
+    }
+    return res.status(500).json({
+        status: "Error",
+        message: "Internal Server Error"
+    });
+};
+exports.celebrateErrorValidator = celebrateErrorValidator;
