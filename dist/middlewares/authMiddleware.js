@@ -72,5 +72,6 @@ const celebrateErrorValidator = async (err, req, res, next) => {
             message: errorBody === null || errorBody === void 0 ? void 0 : errorBody.message
         });
     }
+    return;
 };
 exports.celebrateErrorValidator = celebrateErrorValidator;

@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "../helpers/api-erros";
 import { UserRepository } from "../repositories/UserRepositories";
 import { configMail, mailContent } from "../nodemailer/config"
 import bcrypt from "bcrypt"
