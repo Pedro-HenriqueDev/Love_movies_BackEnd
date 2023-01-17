@@ -27,6 +27,9 @@ export class LoginSistem {
     }
 
     async getProfile(req: Request,res: Response) {
+        if(!req.user)  {
+            return res.status(404).json({message: "User does not exist"})
+        }
         return res.json(req.user)
     }
 
