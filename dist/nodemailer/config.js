@@ -18,7 +18,7 @@ const mailContent = (email, token) => {
         from: `Testes Testando <${process.env.NODEM_USER}>`,
         to: email,
         subject: "Password recovery!",
-        html: `<p>Link to change password: <a href="https://sistema-de-cadastro-e-login.vercel.app/recoverpassword/${token}">Click here</a> </p>`
+        html: `<p>Link to change password: <a href="https://love-movie.vercel.app/#/newpass/${token}">Click here</a> </p>`
     };
 };
 exports.mailContent = mailContent;
@@ -27,7 +27,7 @@ const mailVerification = (email, token) => {
         from: `Testes Testando <${process.env.NODEM_USER}>`,
         to: email,
         subject: "Account verification",
-        html: `<p>Click to complete registration! <a href="https://sistema-de-cadastro-e-login.vercel.app/completeregistration/${token}">Click here</a> </p>`
+        html: `<p>Click to complete registration! <a href="https://love-movie.vercel.app/#/accountcreated/${token}">Click here</a> </p>`
     };
 };
 exports.mailVerification = mailVerification;
