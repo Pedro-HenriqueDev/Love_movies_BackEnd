@@ -93,4 +93,5 @@ export const celebrateErrorValidator = async(err: Error ,req: Request, res: Resp
             message: errorBody?.message
         })
     }
+    return;
 }

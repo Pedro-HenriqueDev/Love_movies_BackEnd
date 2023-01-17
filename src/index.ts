@@ -1,7 +1,6 @@
 import 'express-async-errors'
 import express from 'express'
 import { AppDataSource } from './data-source'
-import { errorMiddleware } from './middlewares/error'
 import routes from './routes'
 import cors from 'cors'
 import { celebrateErrorValidator } from './middlewares/authMiddleware'

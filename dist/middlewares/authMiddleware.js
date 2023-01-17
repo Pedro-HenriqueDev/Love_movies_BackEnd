@@ -14,14 +14,25 @@ const authMiddleware = async (req, res, next) => {
         return res.status(401).json({ message: "Not authorized" });
     }
     const token = authorization.split(" ")[1];
-    const { id } = jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '');
-    const user = await UserRepositories_1.UserRepository.findOneBy({ id });
-    if (!user) {
-        return res.status(401).json({ message: "User does not exist" });
-    }
-    const { password: _, ...loggeedUser } = user;
-    req.user = loggeedUser;
-    next();
+    jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', async function (err, decoded) {
+        if (err != null) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+        if (!decoded) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+        let { id } = decoded;
+        if (!id) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+        const user = await UserRepositories_1.UserRepository.findOneBy({ id: id });
+        if (!user) {
+            return res.status(400).json({ message: "User does not exist" });
+        }
+        const { password: _, ...loggeedUser } = user;
+        req.user = loggeedUser;
+        next();
+    });
 };
 exports.authMiddleware = authMiddleware;
 const authMiddlewareParam = async (req, res, next) => {
@@ -61,5 +72,6 @@ const celebrateErrorValidator = async (err, req, res, next) => {
             message: errorBody === null || errorBody === void 0 ? void 0 : errorBody.message
         });
     }
+    return;
 };
 exports.celebrateErrorValidator = celebrateErrorValidator;
