@@ -7,7 +7,20 @@ const formUserValidator = {
         password: Joi.string().required().min(8)
     })
 }
+const loginValidator = {
+    [Segments.BODY]: Joi.object().keys({
+        email: Joi.string().email().required(),
+        password: Joi.string().required().min(8)
+    })
+}
+const RecoveryPassValidator = {
+    [Segments.BODY]: Joi.object().keys({
+        password: Joi.string().required().min(8)
+    })
+}
 
 export {
-    formUserValidator
+    formUserValidator,
+    loginValidator,
+    RecoveryPassValidator
 }

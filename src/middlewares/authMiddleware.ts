@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from "express";
-import { BadRequestError, UnauthorizedError } from "../helpers/api-erros";
 import { UserRepository } from "../repositories/UserRepositories";
 import jwt from "jsonwebtoken"
 import { CelebrateError } from "celebrate";
@@ -19,16 +18,16 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
     const {authorization} = req.headers
         
         if(!authorization) {
-            throw new UnauthorizedError("Not authorized")
+            return res.status(401).json({message: "Not authorized"})
         }
-        const token = authorization.split(" ")[2]
+        const token = authorization.split(" ")[1]
 
         const {id} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtPayload
         
         const user = await UserRepository.findOneBy({id})
 
         if(!user) {
-            throw new UnauthorizedError("Not authorized")
+            return res.status(401).json({message: "User does not exist"})
         }
         const {password:_,...loggeedUser} = user
         
@@ -40,7 +39,7 @@ export const authMiddlewareParam = async (req: Request,res: Response, next: Next
     const token = req.params.token
         
         if(!token) {
-            throw new UnauthorizedError("Not authorized")
+            return res.status(401).json({message: "Not authorized"})
         }
 
         const {email} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtPayload
@@ -48,7 +47,7 @@ export const authMiddlewareParam = async (req: Request,res: Response, next: Next
         const user = await UserRepository.findOneBy({email})
 
         if(!user) {
-            throw new UnauthorizedError("Not authorized")
+            return res.status(401).json({message: "Not authorized"})
         }
         
         req.user = user
@@ -59,7 +58,7 @@ export const authMiddlewareEmailVerification = async (req: Request,res: Response
     const token = req.params.token
         
         if(!token) {
-            throw new UnauthorizedError("Not authorized")
+            return res.status(401).json({message: "Not authorized"})
         }
 
         const {name, email, password} = jwt.verify(token, process.env.JWT_PASS ?? '') as jwtVerificationPayload
@@ -67,7 +66,7 @@ export const authMiddlewareEmailVerification = async (req: Request,res: Response
         const userExist = await UserRepository.findOneBy({email})
 
         if(userExist) {
-            throw new BadRequestError("Email is already registered")
+            return res.status(401).json({message: "User exist!"})
         }
 
         req.user = {name, email, password}
@@ -81,9 +80,4 @@ export const celebrateErrorValidator = async(err: Error ,req: Request, res: Resp
             message: errorBody?.message
         })
     }
-
-    return res.status(500).json({
-        status: "Error",
-        message: "Internal Server Error"
-    })
 }

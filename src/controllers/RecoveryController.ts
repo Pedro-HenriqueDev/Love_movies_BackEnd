@@ -13,7 +13,7 @@ export class RecoveryPassword {
         const user = await UserRepository.findOneBy({email})
 
         if(!user) {
-            throw new BadRequestError("email not found")
+            return res.status(400).json({message: "Email not found"})
         }
 
         const token = jwt.sign({email: user.email}, process.env.JWT_PASS ?? '', {expiresIn: '1h'})
@@ -23,6 +23,8 @@ export class RecoveryPassword {
         await transport.sendMail(mailContent(email, token)).then((result) => {
             console.log(result)
             return res.json("Recovery link sent to your email")
+        }).catch(err => {
+            return res.status(500).json({message: "Internal Server Error"})
         })
 
     }
@@ -30,11 +32,12 @@ export class RecoveryPassword {
     async recoveryPassword(req: Request,res: Response) {
         const user = await UserRepository.findOneBy({id: req.user.id})
         const newPass = req.body.password
-        const hash = await bcrypt.hash(newPass, 10)
-
+        
         if(!user) {
-            throw new BadRequestError("email not found")
+            return res.status(400).json({message: "Email not found"})
         }
+        
+        const hash = await bcrypt.hash(newPass, 10)
         user.password = hash
 
         await UserRepository.save(user)

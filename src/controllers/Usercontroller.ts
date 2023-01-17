@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "../helpers/api-erros";
 import { UserRepository } from "../repositories/UserRepositories";
 import { configMail, mailVerification } from "../nodemailer/config"
 import bcrypt from "bcrypt"
@@ -18,7 +17,7 @@ export class UserController {
         const userExist = await UserRepository.findOneBy({email})
 
         if(userExist) {
-            throw new BadRequestError("Email already exists")
+            return res.status(400).json({message:"Email already exists"})
         }
         const hashPassword = await bcrypt.hash(password, 10)
         const user = {name, email, password: hashPassword}
@@ -30,6 +29,8 @@ export class UserController {
         await transport.sendMail(mailVerification(email, token)).then((result) => {
             console.log(result)
             return res.json("A verification email has been sent to your email")
+        }).catch(err => {
+            return res.status(500).json({err:"Internal server Error"})
         })
 
     }
@@ -55,13 +56,13 @@ export class UserController {
         const user = await UserRepository.findOneBy({id: userId})
 
         if(!user){
-            throw new BadRequestError("User does not exist")
+            return res.status(400).json({message:"Email or password invalid"})
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
 
         if(!verifyPass) {
-            throw new BadRequestError("Invalid password")
+            return res.status(400).json({message:"Email or password invalid"})
         }
 
         await UserRepository.remove(user)
