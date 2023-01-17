@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import { BadRequestError } from "../helpers/api-erros";
 import { UserRepository } from "../repositories/UserRepositories";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
@@ -11,16 +10,16 @@ export class LoginSistem {
         const user = await UserRepository.findOneBy({email})
 
         if(!user) {
-            throw new BadRequestError("Invalid email or password")
+            return res.status(400).json({message: "Invalid email or password"})
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
 
         if(!verifyPass) {
-            throw new BadRequestError("Invalid email or password")
+            return res.status(400).json({message: "Invalid email or password"})
         }
         
-        const token = jwt.sign({id: user.id}, process.env.JWT_PASS ?? '', {expiresIn: '2d'})
+        const token = jwt.sign({id: user.id}, process.env.JWT_PASS ?? '', {expiresIn: '7d'})
 
         const {password:_,...userLogin} = user
         return res.json({user: userLogin ,token})

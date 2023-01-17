@@ -27,7 +27,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserController = void 0;
-const api_erros_1 = require("../helpers/api-erros");
 const UserRepositories_1 = require("../repositories/UserRepositories");
 const config_1 = require("../nodemailer/config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
@@ -42,7 +41,7 @@ class UserController {
         const { name, email, password } = req.body;
         const userExist = await UserRepositories_1.UserRepository.findOneBy({ email });
         if (userExist) {
-            throw new api_erros_1.BadRequestError("Email already exists");
+            return res.status(400).json({ message: "Email already exists" });
         }
         const hashPassword = await bcrypt_1.default.hash(password, 10);
         const user = { name, email, password: hashPassword };
@@ -51,6 +50,8 @@ class UserController {
         await transport.sendMail((0, config_1.mailVerification)(email, token)).then((result) => {
             console.log(result);
             return res.json("A verification email has been sent to your email");
+        }).catch(err => {
+            return res.status(500).json({ err: "Internal server Error" });
         });
     }
     async completeRegistration(req, res) {
@@ -67,11 +68,11 @@ class UserController {
         const password = req.body.password;
         const user = await UserRepositories_1.UserRepository.findOneBy({ id: userId });
         if (!user) {
-            throw new api_erros_1.BadRequestError("User does not exist");
+            return res.status(400).json({ message: "Email or password invalid" });
         }
         const verifyPass = await bcrypt_1.default.compare(password, user.password);
         if (!verifyPass) {
-            throw new api_erros_1.BadRequestError("Invalid password");
+            return res.status(400).json({ message: "Email or password invalid" });
         }
         await UserRepositories_1.UserRepository.remove(user);
         const { password: _, ...userDeleted } = user;
