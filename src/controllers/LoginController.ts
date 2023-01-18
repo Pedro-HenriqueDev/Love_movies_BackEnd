@@ -19,7 +19,7 @@ export class LoginSistem {
             return res.status(400).json({message: "Invalid email or password"})
         }
         
-        const token = jwt.sign({id: user.id}, process.env.JWT_PASS ?? '', {expiresIn: '7d'})
+        const token = jwt.sign({id: user.id, email: user.email}, process.env.JWT_PASS ?? '', {expiresIn: '7d'})
 
         const {password:_,...userLogin} = user
         return res.json({user: userLogin ,token})

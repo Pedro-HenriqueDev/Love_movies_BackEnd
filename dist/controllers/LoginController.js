@@ -19,7 +19,7 @@ class LoginSistem {
         if (!verifyPass) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
-        const token = jsonwebtoken_1.default.sign({ id: user.id }, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', { expiresIn: '7d' });
+        const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email }, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', { expiresIn: '7d' });
         const { password: _, ...userLogin } = user;
         return res.json({ user: userLogin, token });
     }

@@ -8,7 +8,7 @@ const authMiddleware_1 = require("./middlewares/authMiddleware");
 const celebrate_1 = require("celebrate");
 const ValidatorFormUser_1 = require("./helpers/ValidatorFormUser");
 const routes = (0, express_1.Router)();
-routes.get("/users", new Usercontroller_1.UserController().getUsers);
+routes.get("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().getUsers);
 routes.get("/", new Usercontroller_1.UserController().index);
 routes.post("/users", (0, celebrate_1.celebrate)(ValidatorFormUser_1.formUserValidator), new Usercontroller_1.UserController().cadastre);
 routes.get("/completeregistration/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.formUserValidator), authMiddleware_1.authMiddlewareEmailVerification, new Usercontroller_1.UserController().completeRegistration);

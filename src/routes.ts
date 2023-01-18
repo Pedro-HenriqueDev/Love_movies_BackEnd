@@ -8,7 +8,7 @@ import { formUserValidator, loginValidator, RecoveryPassValidator } from './help
 
 const routes = Router()
 
-routes.get("/users", new UserController().getUsers)
+routes.get("/users",authMiddleware, new UserController().getUsers)
 
 routes.get("/", new UserController().index)
 routes.post("/users",celebrate(formUserValidator), new UserController().cadastre)
