@@ -16,26 +16,27 @@ type jwtVerificationPayload = {
 
 export const authMiddleware = async (req: Request,res: Response, next: NextFunction) => {
     const {authorization} = req.headers
-    
+        
         if(!authorization) {
             return res.status(401).json({message: "Not authorized"})
+            
         }
         const token = authorization.split(" ")[1]
-
         jwt.verify(token, process.env.JWT_PASS ?? '', async function(err, decoded) {
+            console.log("fqefq")
             if(err != null) {
                 return res.status(401).json({message: "Not authorized"})
             }
             if(!decoded) {
                 return res.status(401).json({message: "Not authorized"})
             }
-            
-            let {id} = decoded as jwtPayload
 
-            if(!id) {
+            let {email} = decoded as jwtPayload
+
+            if(!email) {
                 return res.status(401).json({message: "Not authorized"})
             }
-            const user = await UserRepository.findOneBy({id: id})
+            const user = await UserRepository.findOneBy({email})
     
             if(!user) {
                 return res.status(400).json({message: "User does not exist"})
@@ -50,7 +51,6 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
 
 export const authMiddlewareParam = async (req: Request,res: Response, next: NextFunction) => {
     const token = req.params.token
-        
         if(!token) {
             return res.status(401).json({message: "Not authorized"})
         }
