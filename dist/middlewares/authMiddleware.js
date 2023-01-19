@@ -15,7 +15,6 @@ const authMiddleware = async (req, res, next) => {
     }
     const token = authorization.split(" ")[1];
     jsonwebtoken_1.default.verify(token, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', async function (err, decoded) {
-        console.log("fqefq");
         if (err != null) {
             return res.status(401).json({ message: "Not authorized" });
         }

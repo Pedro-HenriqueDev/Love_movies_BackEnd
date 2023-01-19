@@ -7,6 +7,7 @@ const Usercontroller_1 = require("./controllers/Usercontroller");
 const authMiddleware_1 = require("./middlewares/authMiddleware");
 const celebrate_1 = require("celebrate");
 const ValidatorFormUser_1 = require("./helpers/ValidatorFormUser");
+const MoviesController_1 = require("./controllers/MoviesController");
 const routes = (0, express_1.Router)();
 routes.get("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().getUsers);
 routes.get("/", new Usercontroller_1.UserController().index);
@@ -17,4 +18,8 @@ routes.get("/profile", authMiddleware_1.authMiddleware, new LoginController_1.Lo
 routes.post("/forgotpassword", new RecoveryController_1.RecoveryPassword().forgotPasswort);
 routes.post("/recoverpassword/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.RecoveryPassValidator), authMiddleware_1.authMiddlewareParam, new RecoveryController_1.RecoveryPassword().recoveryPassword);
 routes.delete("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().deleteUser);
+// 
+routes.get("/relations/movies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getAllRelations);
+routes.post("/relations/movies", (0, celebrate_1.celebrate)(ValidatorFormUser_1.MoviesValidator), authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().create);
+routes.delete("/relations/movies", (0, celebrate_1.celebrate)(ValidatorFormUser_1.MoviesValidator), authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().delete);
 exports.default = routes;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecoveryPassValidator = exports.loginValidator = exports.formUserValidator = void 0;
+exports.MoviesValidator = exports.RecoveryPassValidator = exports.loginValidator = exports.formUserValidator = void 0;
 const celebrate_1 = require("celebrate");
 const formUserValidator = {
     [celebrate_1.Segments.BODY]: celebrate_1.Joi.object().keys({
@@ -23,3 +23,9 @@ const RecoveryPassValidator = {
     })
 };
 exports.RecoveryPassValidator = RecoveryPassValidator;
+const MoviesValidator = {
+    [celebrate_1.Segments.BODY]: celebrate_1.Joi.object().keys({
+        idMovie: celebrate_1.Joi.number().required()
+    })
+};
+exports.MoviesValidator = MoviesValidator;

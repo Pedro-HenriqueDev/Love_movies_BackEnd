@@ -4,7 +4,8 @@ import { RecoveryPassword } from './controllers/RecoveryController'
 import { UserController } from './controllers/Usercontroller'
 import { authMiddleware, authMiddlewareParam, authMiddlewareEmailVerification } from "./middlewares/authMiddleware"
 import {celebrate} from 'celebrate'
-import { formUserValidator, loginValidator, RecoveryPassValidator } from './helpers/ValidatorFormUser'
+import { formUserValidator, loginValidator, RecoveryPassValidator, MoviesValidator } from './helpers/ValidatorFormUser'
+import { MoviesController } from './controllers/MoviesController'
 
 const routes = Router()
 
@@ -22,6 +23,11 @@ routes.post("/recoverpassword/:token",celebrate(RecoveryPassValidator),authMiddl
 
 routes.delete("/users", authMiddleware, new UserController().deleteUser)
 
+// 
+
+routes.get("/relations/movies", authMiddleware, new MoviesController().getAllRelations)
+routes.post("/relations/movies",celebrate(MoviesValidator), authMiddleware, new MoviesController().create)
+routes.delete("/relations/movies",celebrate(MoviesValidator), authMiddleware, new MoviesController().delete)
 
 
 

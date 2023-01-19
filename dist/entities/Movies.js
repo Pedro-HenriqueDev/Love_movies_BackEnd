@@ -9,32 +9,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Movies = void 0;
 const typeorm_1 = require("typeorm");
-const Movies_1 = require("./Movies");
-let User = class User {
+const User_1 = require("./User");
+let Movies = class Movies {
 };
 __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)("uuid"),
     __metadata("design:type", String)
-], User.prototype, "id", void 0);
+], Movies.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: false, type: "text" }),
-    __metadata("design:type", String)
-], User.prototype, "name", void 0);
+    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.movies),
+    __metadata("design:type", User_1.User)
+], Movies.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ type: "text", nullable: false, unique: true }),
-    __metadata("design:type", String)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, typeorm_1.Column)({ type: "text" }),
-    __metadata("design:type", String)
-], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => Movies_1.Movies, movies => movies.user),
-    __metadata("design:type", Array)
-], User.prototype, "movies", void 0);
-User = __decorate([
-    (0, typeorm_1.Entity)("users")
-], User);
-exports.User = User;
+    (0, typeorm_1.Column)({ type: "int", nullable: false }),
+    __metadata("design:type", Number)
+], Movies.prototype, "movie", void 0);
+Movies = __decorate([
+    (0, typeorm_1.Entity)("movies")
+], Movies);
+exports.Movies = Movies;

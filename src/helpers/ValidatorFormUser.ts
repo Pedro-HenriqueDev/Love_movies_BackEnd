@@ -18,9 +18,15 @@ const RecoveryPassValidator = {
         password: Joi.string().required().min(8)
     })
 }
+const MoviesValidator = {
+    [Segments.BODY]: Joi.object().keys({
+        idMovie: Joi.number().required()
+    })
+}
 
 export {
     formUserValidator,
     loginValidator,
-    RecoveryPassValidator
+    RecoveryPassValidator,
+    MoviesValidator
 }
