@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
-import { Users_Movies } from "./Users_Movies";
+import { Movies } from "./Movies";
 
 @Entity("users")
 export class User {
@@ -15,6 +15,6 @@ export class User {
     @Column({type: "text"})
     password: string
 
-    @OneToMany(() => Users_Movies, movies => movies.user_id)
-    movies: Users_Movies[]
+    @OneToMany(() => Movies, movies => movies.user)
+    movies: Movies[]
 }

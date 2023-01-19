@@ -19,11 +19,10 @@ export const authMiddleware = async (req: Request,res: Response, next: NextFunct
         
         if(!authorization) {
             return res.status(401).json({message: "Not authorized"})
-            
         }
         const token = authorization.split(" ")[1]
         jwt.verify(token, process.env.JWT_PASS ?? '', async function(err, decoded) {
-            console.log("fqefq")
+
             if(err != null) {
                 return res.status(401).json({message: "Not authorized"})
             }
