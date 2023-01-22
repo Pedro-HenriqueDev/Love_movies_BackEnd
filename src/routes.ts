@@ -25,7 +25,8 @@ routes.delete("/users", authMiddleware, new UserController().deleteUser)
 
 // 
 
-routes.get("/relations/movies", authMiddleware, new MoviesController().getAllRelations)
+routes.get("/relations/allmovies", authMiddleware, new MoviesController().getAllMovies)
+routes.get("/relations/movies", authMiddleware, new MoviesController().getRelationsPagination)
 routes.post("/relations/movies",celebrate(MoviesValidator), authMiddleware, new MoviesController().create)
 routes.delete("/relations/movies",celebrate(MoviesValidator), authMiddleware, new MoviesController().delete)
 

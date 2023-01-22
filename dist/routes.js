@@ -19,7 +19,8 @@ routes.post("/forgotpassword", new RecoveryController_1.RecoveryPassword().forgo
 routes.post("/recoverpassword/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.RecoveryPassValidator), authMiddleware_1.authMiddlewareParam, new RecoveryController_1.RecoveryPassword().recoveryPassword);
 routes.delete("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().deleteUser);
 // 
-routes.get("/relations/movies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getAllRelations);
+routes.get("/relations/allmovies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getAllMovies);
+routes.get("/relations/movies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getRelationsPagination);
 routes.post("/relations/movies", (0, celebrate_1.celebrate)(ValidatorFormUser_1.MoviesValidator), authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().create);
 routes.delete("/relations/movies", (0, celebrate_1.celebrate)(ValidatorFormUser_1.MoviesValidator), authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().delete);
 exports.default = routes;
