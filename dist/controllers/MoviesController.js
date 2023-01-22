@@ -4,14 +4,37 @@ exports.MoviesController = void 0;
 const MoviesRepositories_1 = require("../repositories/MoviesRepositories");
 const UserRepositories_1 = require("../repositories/UserRepositories");
 class MoviesController {
-    async getAllRelations(req, res) {
+    async getAllMovies(req, res) {
         const id = req.user.id;
         const user = await UserRepositories_1.UserRepository.findOneBy({ id });
         if (!user) {
             return res.status(404).json({ message: "User does not found" });
         }
-        const moviesRelations = await MoviesRepositories_1.MoviesRepository.find({ where: { user }, relations: { user: true }, select: { id: true, movie: true, user: { id: true } } });
-        return res.json(moviesRelations);
+        const movies = await MoviesRepositories_1.MoviesRepository.find({ where: { user }, relations: { user: true }, select: { id: true, movie: true, user: { id: true } } });
+        return res.json(movies);
+    }
+    async getRelationsPagination(req, res) {
+        const id = req.user.id;
+        let page = Number(req.query.page);
+        if (!page) {
+            page = 1;
+        }
+        const user = await UserRepositories_1.UserRepository.findOneBy({ id });
+        if (!user) {
+            return res.status(404).json({ message: "User does not found" });
+        }
+        const numberEntites = 20;
+        const pagination = (-1 + page) * numberEntites;
+        const [movies, count] = await MoviesRepositories_1.MoviesRepository.findAndCount({ where: { user }, relations: { user: true }, select: { id: true, movie: true, user: { id: true } }, take: numberEntites, skip: pagination });
+        const pages = count / numberEntites;
+        const allPages = Number.isInteger(pages) ? pages : Math.round(Math.trunc(pages) + 1);
+        const data = {
+            data: movies,
+            page,
+            allPages,
+            total_movies: count
+        };
+        return res.json(data);
     }
     async create(req, res) {
         const id = req.user.id;
