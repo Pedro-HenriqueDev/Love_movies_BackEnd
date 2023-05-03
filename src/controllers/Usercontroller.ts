@@ -50,10 +50,10 @@ export class UserController {
     }
 
     async deleteUser(req: Request,res: Response) {
-        const userId = req.user.id
+        const userEmail = req.body.email
         const password = req.body.password
 
-        const user = await UserRepository.findOneBy({id: userId})
+        const user = await UserRepository.findOneBy({email: userEmail})
 
         if(!user){
             return res.status(400).json({message:"Email or password invalid"})
