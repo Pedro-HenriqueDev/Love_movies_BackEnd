@@ -17,7 +17,7 @@ routes.post("/login", (0, celebrate_1.celebrate)(ValidatorFormUser_1.loginValida
 routes.get("/profile", authMiddleware_1.authMiddleware, new LoginController_1.LoginSistem().getProfile);
 routes.post("/forgotpassword", new RecoveryController_1.RecoveryPassword().forgotPasswort);
 routes.post("/recoverpassword/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.RecoveryPassValidator), authMiddleware_1.authMiddlewareParam, new RecoveryController_1.RecoveryPassword().recoveryPassword);
-routes.delete("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().deleteUser);
+routes.delete("/users", new Usercontroller_1.UserController().deleteUser);
 // 
 routes.get("/relations/allmovies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getAllMovies);
 routes.get("/relations/movies", authMiddleware_1.authMiddleware, new MoviesController_1.MoviesController().getRelationsPagination);

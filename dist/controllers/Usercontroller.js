@@ -64,9 +64,9 @@ class UserController {
         return res.json(users);
     }
     async deleteUser(req, res) {
-        const userId = req.user.id;
+        const userEmail = req.body.email;
         const password = req.body.password;
-        const user = await UserRepositories_1.UserRepository.findOneBy({ id: userId });
+        const user = await UserRepositories_1.UserRepository.findOneBy({ email: userEmail });
         if (!user) {
             return res.status(400).json({ message: "Email or password invalid" });
         }
