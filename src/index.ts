@@ -10,14 +10,7 @@ const port = process.env.PORT || 3000
 AppDataSource.initialize().then(() => {
 	const app = express()
 
-	
-	const allowedOrigins = ['https://love-movie.vercel.app'];
-
-	const options: cors.CorsOptions = {
-	origin: allowedOrigins
-	};
-
-	app.use(cors(options));
+	app.use(cors());
 
 	app.use(express.json())
 
