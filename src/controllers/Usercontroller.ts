@@ -53,8 +53,13 @@ export class UserController {
         const userEmail = req.body.email
         const password = req.body.password
 
-        const user = await UserRepository.findOneBy({email: userEmail})
+        
+        if(!userEmail){
+            return res.status(400).json({message:"Email or password invalid"})
+        }
 
+        const user = await UserRepository.findOneBy({email: userEmail})
+        
         if(!user){
             return res.status(400).json({message:"Email or password invalid"})
         }
@@ -65,9 +70,7 @@ export class UserController {
             return res.status(400).json({message:"Email or password invalid"})
         }
 
-        const userDeleted = await UserRepository.remove(user)
-
-        userDeleted.password = ""
+        const userDeleted = await UserRepository.delete({email: userEmail})
 
         return res.json({userDeleted, message: "User deleted successfully"})
         

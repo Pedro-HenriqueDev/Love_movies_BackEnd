@@ -66,6 +66,9 @@ class UserController {
     async deleteUser(req, res) {
         const userEmail = req.body.email;
         const password = req.body.password;
+        if (!userEmail) {
+            return res.status(400).json({ message: "Email or password invalid" });
+        }
         const user = await UserRepositories_1.UserRepository.findOneBy({ email: userEmail });
         if (!user) {
             return res.status(400).json({ message: "Email or password invalid" });
@@ -74,8 +77,7 @@ class UserController {
         if (!verifyPass) {
             return res.status(400).json({ message: "Email or password invalid" });
         }
-        const userDeleted = await UserRepositories_1.UserRepository.remove(user);
-        userDeleted.password = "";
+        const userDeleted = await UserRepositories_1.UserRepository.delete({ email: userEmail });
         return res.json({ userDeleted, message: "User deleted successfully" });
     }
 }
