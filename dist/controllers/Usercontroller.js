@@ -74,9 +74,9 @@ class UserController {
         if (!verifyPass) {
             return res.status(400).json({ message: "Email or password invalid" });
         }
-        await UserRepositories_1.UserRepository.remove(user);
-        const { password: _, ...userDeleted } = user;
-        return res.json({ user: userDeleted, message: "User deleted successfully" });
+        const userDeleted = await UserRepositories_1.UserRepository.remove(user);
+        userDeleted.password = "";
+        return res.json({ userDeleted, message: "User deleted successfully" });
     }
 }
 exports.UserController = UserController;
