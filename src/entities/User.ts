@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, JoinTable } from "typeorm";
 import { Movies } from "./Movies";
 
 @Entity("users")
@@ -15,6 +15,6 @@ export class User {
     @Column({type: "text"})
     password: string
 
-    @OneToMany(() => Movies, movies => movies.user)
+    @OneToMany(() => Movies, movies => movies.user, {cascade: true})
     movies: Movies[]
 }

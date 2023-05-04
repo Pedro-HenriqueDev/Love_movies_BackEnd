@@ -19,7 +19,9 @@ __decorate([
     __metadata("design:type", String)
 ], Movies.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.movies),
+    (0, typeorm_1.ManyToOne)(() => User_1.User, user => user.movies, {
+        onDelete: 'CASCADE',
+    }),
     __metadata("design:type", User_1.User)
 ], Movies.prototype, "user", void 0);
 __decorate([

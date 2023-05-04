@@ -7,7 +7,9 @@ export class Movies {
     @PrimaryGeneratedColumn("uuid")
     id: string
 
-    @ManyToOne(() => User, user => user.movies)
+    @ManyToOne(() => User, user => user.movies, {
+        onDelete: 'CASCADE',
+    })
     user: User
 
     @Column({type: "int", nullable: false})
