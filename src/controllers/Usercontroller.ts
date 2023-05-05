@@ -58,8 +58,8 @@ export class UserController {
             return res.status(400).json({message:"Email or password invalid"})
         }
 
-        const userDeleted = await UserRepository.delete({id})
-        console.log(userDeleted)
+        const userDeleted = await UserRepository.remove(user)
+        
         return res.json({userDeleted, message: "User deleted successfully"})
         
     }
