@@ -1,8 +1,7 @@
 import { Request, Response } from "express";
 import { UserRepository } from "../repositories/UserRepositories";
-import { configMail, mailVerification } from "../nodemailer/config"
+import { mailVerification, sendEmail } from "../sendGrid/config"
 import bcrypt from "bcrypt"
-import * as nodemailer from "nodemailer"
 import jwt from "jsonwebtoken"
 
 export class UserController {
@@ -23,16 +22,10 @@ export class UserController {
         const user = {name, email, password: hashPassword}
 
         const token = jwt.sign(user, process.env.JWT_PASS ?? '', {expiresIn: '1h'})
+        
+        const emailResult = await sendEmail(mailVerification(email, token), "A verification email has been sent to your email")
 
-        let transport = nodemailer.createTransport(configMail)
-
-        await transport.sendMail(mailVerification(email, token)).then((result) => {
-            console.log(result)
-            return res.json("A verification email has been sent to your email")
-        }).catch(err => {
-            return res.status(500).json({err:"Internal server Error"})
-        })
-
+        return res.status(emailResult.status).json(emailResult.message)
     }
 
     async completeRegistration(req: Request,res: Response) {
@@ -50,28 +43,23 @@ export class UserController {
     }
 
     async deleteUser(req: Request,res: Response) {
-        const userEmail = req.body.email
+        const id = req.user.id
         const password = req.body.password
 
-        
-        if(!userEmail){
-            return res.status(400).json({message:"Email or password invalid"})
-        }
-
-        const user = await UserRepository.findOneBy({email: userEmail})
+        const user = await UserRepository.findOneBy({id})
         
         if(!user){
             return res.status(400).json({message:"Email or password invalid"})
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
-
+        console.log(verifyPass, user)
         if(!verifyPass) {
             return res.status(400).json({message:"Email or password invalid"})
         }
 
-        const userDeleted = await UserRepository.delete({email: userEmail})
-
+        const userDeleted = await UserRepository.remove(user)
+        
         return res.json({userDeleted, message: "User deleted successfully"})
         
     }

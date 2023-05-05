@@ -21,7 +21,7 @@ routes.get("/profile",authMiddleware, new LoginSistem().getProfile)
 routes.post("/forgotpassword", new RecoveryPassword().forgotPasswort)
 routes.post("/recoverpassword/:token",celebrate(RecoveryPassValidator),authMiddlewareParam, new RecoveryPassword().recoveryPassword)
 
-routes.delete("/users", new UserController().deleteUser)
+routes.delete("/users", authMiddleware, new UserController().deleteUser)
 
 // 
 
