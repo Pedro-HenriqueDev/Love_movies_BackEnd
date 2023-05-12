@@ -12,7 +12,6 @@ export class UserController {
 
     async cadastre(req: Request,res: Response) {
         const {name, email, password} = req.body
-
         const userExist = await UserRepository.findOneBy({email})
 
         if(userExist) {
@@ -22,7 +21,6 @@ export class UserController {
         const user = {name, email, password: hashPassword}
 
         const token = jwt.sign(user, process.env.JWT_PASS ?? '', {expiresIn: '1h'})
-        
         const emailResult = await sendEmail(mailVerification(email, token), "A verification email has been sent to your email")
 
         return res.status(emailResult.status).json(emailResult.message)

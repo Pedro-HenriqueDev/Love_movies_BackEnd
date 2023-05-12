@@ -15,7 +15,7 @@ async function sendEmail(mail, message) {
 exports.sendEmail = sendEmail;
 const mailContent = (email, token) => {
     return {
-        from: `Testes Testando <projetopessoal00@gmail.com>`,
+        from: `projetopessoal00@gmail.com`,
         to: email,
         subject: "Password recovery!",
         html: `<p>Link to change password: <a href="https://love-movie.vercel.app/#/newpass/${token}">Click here</a> </p>`
@@ -24,7 +24,7 @@ const mailContent = (email, token) => {
 exports.mailContent = mailContent;
 const mailVerification = (email, token) => {
     return {
-        from: `Testes Testando <projetopessoal00@gmail.com>`,
+        from: `projetopessoal00@gmail.com`,
         to: email,
         subject: "Account verification",
         html: `<p>Click to complete registration! <a href="https://love-movie.vercel.app/#/accountcreated/${token}">Click here</a> </p>`

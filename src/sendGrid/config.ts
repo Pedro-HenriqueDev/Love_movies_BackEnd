@@ -11,7 +11,6 @@ export async function sendEmail(mail: mail, message: string) {
     sendGrid.setApiKey(process.env.SD_APIKEY ?? "")
 
     const emailSent = await sendGrid.send(mail)
-
     if(emailSent[0].statusCode == 202) {
         return {status: 200, message}
     }
@@ -20,7 +19,7 @@ export async function sendEmail(mail: mail, message: string) {
 
 export const mailContent = (email: string, token: string) => {
     return {
-        from: `Testes Testando <projetopessoal00@gmail.com>`,
+        from: `projetopessoal00@gmail.com`,
         to: email,
         subject: "Password recovery!",
         html: `<p>Link to change password: <a href="https://love-movie.vercel.app/#/newpass/${token}">Click here</a> </p>`
@@ -29,7 +28,7 @@ export const mailContent = (email: string, token: string) => {
 
 export const mailVerification = (email: string, token: string) => {
     return {
-        from: `Testes Testando <projetopessoal00@gmail.com>`,
+        from: `projetopessoal00@gmail.com`,
         to: email,
         subject: "Account verification",
         html: `<p>Click to complete registration! <a href="https://love-movie.vercel.app/#/accountcreated/${token}">Click here</a> </p>`
