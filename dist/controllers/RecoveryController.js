@@ -21,7 +21,6 @@ class RecoveryPassword {
         }
         const token = jsonwebtoken_1.default.sign({ email: user.email }, (_a = process.env.JWT_PASS) !== null && _a !== void 0 ? _a : '', { expiresIn: '1h' });
         const emailResult = await (0, config_1.sendEmail)((0, config_1.mailContent)(email, token), "Recovery link sent to your email");
-        console.log(emailResult);
         res.status(emailResult.status).json(emailResult.message);
     }
     async recoveryPassword(req, res) {

@@ -42,7 +42,6 @@ class UserController {
             return res.status(400).json({ message: "Email or password invalid" });
         }
         const verifyPass = await bcrypt_1.default.compare(password, user.password);
-        console.log(verifyPass, user);
         if (!verifyPass) {
             return res.status(400).json({ message: "Email or password invalid" });
         }

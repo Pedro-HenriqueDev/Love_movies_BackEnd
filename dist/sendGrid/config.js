@@ -7,7 +7,6 @@ async function sendEmail(mail, message) {
     const sendGrid = new mail_1.MailService();
     sendGrid.setApiKey((_a = process.env.SD_APIKEY) !== null && _a !== void 0 ? _a : "");
     const emailSent = await sendGrid.send(mail);
-    console.log(emailSent);
     if (emailSent[0].statusCode == 202) {
         return { status: 200, message };
     }
