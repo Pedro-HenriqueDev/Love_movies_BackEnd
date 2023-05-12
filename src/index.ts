@@ -13,7 +13,7 @@ AppDataSource.initialize().then(() => {
 	const app = express()
 
 	const options: cors.CorsOptions = {
-		origin: true,
+		origin: allowedOrigins,
 		methods: ["GET", "OPTIONS", "PUT", "POST", "DELETE"],
 	};
 
