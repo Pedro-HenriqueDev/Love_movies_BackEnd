@@ -14,8 +14,8 @@ const port = process.env.PORT || 3000;
 data_source_1.AppDataSource.initialize().then(() => {
     const app = (0, express_1.default)();
     const options = {
-        origin: allowedOrigins,
-        methods: ["GET", "OPTIONS", "PUT", "POST", "DELETE", "HEAD"]
+        origin: true,
+        methods: ["GET", "OPTIONS", "PUT", "POST", "DELETE"],
     };
     app.use((0, cors_1.default)(options));
     app.use(express_1.default.json());
