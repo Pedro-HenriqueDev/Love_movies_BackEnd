@@ -5,11 +5,18 @@ import routes from './routes'
 import cors from 'cors'
 import { celebrateErrorValidator } from './middlewares/authMiddleware'
 
+const allowedOrigins = ['https://love-movie.vercel.app/#/'];
+
 const port = process.env.PORT || 3000
 
 AppDataSource.initialize().then(() => {
 	const app = express()
-	app.use(cors());
+
+	const options: cors.CorsOptions = {
+		origin: allowedOrigins
+	};
+
+	app.use(cors(options));
 	app.use(express.json())
 
 	app.use(routes)

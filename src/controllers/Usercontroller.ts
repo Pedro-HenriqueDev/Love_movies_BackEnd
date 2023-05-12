@@ -53,7 +53,6 @@ export class UserController {
         }
 
         const verifyPass = await bcrypt.compare(password, user.password)
-        console.log(verifyPass, user)
         if(!verifyPass) {
             return res.status(400).json({message:"Email or password invalid"})
         }

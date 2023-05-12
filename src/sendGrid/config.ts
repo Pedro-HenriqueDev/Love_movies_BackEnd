@@ -11,8 +11,6 @@ export async function sendEmail(mail: mail, message: string) {
     sendGrid.setApiKey(process.env.SD_APIKEY ?? "")
 
     const emailSent = await sendGrid.send(mail)
-    
-    console.log(emailSent)
 
     if(emailSent[0].statusCode == 202) {
         return {status: 200, message}

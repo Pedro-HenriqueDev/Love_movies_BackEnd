@@ -25,7 +25,6 @@ export class RecoveryPassword {
         const token = jwt.sign({email: user.email}, process.env.JWT_PASS ?? '', {expiresIn: '1h'})
 
         const emailResult = await sendEmail(mailContent(email, token), "Recovery link sent to your email")
-        console.log(emailResult)
         res.status(emailResult.status).json(emailResult.message)
     }
 
