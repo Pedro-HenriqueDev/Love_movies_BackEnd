@@ -1,4 +1,7 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const LoginController_1 = require("./controllers/LoginController");
@@ -8,6 +11,8 @@ const authMiddleware_1 = require("./middlewares/authMiddleware");
 const celebrate_1 = require("celebrate");
 const ValidatorFormUser_1 = require("./helpers/ValidatorFormUser");
 const MoviesController_1 = require("./controllers/MoviesController");
+const multer_1 = __importDefault(require("multer"));
+const uploadImage_1 = require("./middlewares/uploadImage");
 const routes = (0, express_1.Router)();
 routes.get("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().getUsers);
 routes.get("/", new Usercontroller_1.UserController().index);
@@ -15,6 +20,7 @@ routes.post("/users", (0, celebrate_1.celebrate)(ValidatorFormUser_1.formUserVal
 routes.get("/completeregistration/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.formUserValidator), authMiddleware_1.authMiddlewareEmailVerification, new Usercontroller_1.UserController().completeRegistration);
 routes.post("/login", (0, celebrate_1.celebrate)(ValidatorFormUser_1.loginValidator), new LoginController_1.LoginSistem().login);
 routes.get("/profile", authMiddleware_1.authMiddleware, new LoginController_1.LoginSistem().getProfile);
+routes.patch("/user/image", authMiddleware_1.authMiddleware, (0, multer_1.default)(uploadImage_1.multerConfig).single("image"), new Usercontroller_1.UserController().editImage);
 routes.post("/forgotpassword", new RecoveryController_1.RecoveryPassword().forgotPasswort);
 routes.post("/recoverpassword/:token", (0, celebrate_1.celebrate)(ValidatorFormUser_1.RecoveryPassValidator), authMiddleware_1.authMiddlewareParam, new RecoveryController_1.RecoveryPassword().recoveryPassword);
 routes.delete("/users", authMiddleware_1.authMiddleware, new Usercontroller_1.UserController().deleteUser);

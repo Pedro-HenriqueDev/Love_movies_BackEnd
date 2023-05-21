@@ -6,6 +6,8 @@ import { authMiddleware, authMiddlewareParam, authMiddlewareEmailVerification } 
 import {celebrate} from 'celebrate'
 import { formUserValidator, loginValidator, RecoveryPassValidator, MoviesValidator } from './helpers/ValidatorFormUser'
 import { MoviesController } from './controllers/MoviesController'
+import multer from "multer"
+import { multerConfig } from './middlewares/uploadImage'
 
 const routes = Router()
 
@@ -17,6 +19,7 @@ routes.get("/completeregistration/:token",celebrate(formUserValidator),authMiddl
 
 routes.post("/login",celebrate(loginValidator), new LoginSistem().login)
 routes.get("/profile",authMiddleware, new LoginSistem().getProfile)
+routes.patch("/user/image", authMiddleware,multer(multerConfig).single("image"), new UserController().editImage)
 
 routes.post("/forgotpassword", new RecoveryPassword().forgotPasswort)
 routes.post("/recoverpassword/:token",celebrate(RecoveryPassValidator),authMiddlewareParam, new RecoveryPassword().recoveryPassword)

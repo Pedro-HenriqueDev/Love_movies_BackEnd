@@ -8,6 +8,7 @@ const UserRepositories_1 = require("../repositories/UserRepositories");
 const config_1 = require("../sendGrid/config");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const fs_1 = __importDefault(require("fs"));
 class UserController {
     async index(req, res) {
         return res.json("Welcome, Registration and login system, Pedro Henrique");
@@ -33,6 +34,34 @@ class UserController {
     async getUsers(req, res) {
         const users = await UserRepositories_1.UserRepository.find({ select: { id: true, email: true, name: true } });
         return res.json(users);
+    }
+    async editImage(req, res) {
+        var _a;
+        if (req.body.remove == "true") {
+            const user = await UserRepositories_1.UserRepository.findOneBy({ id: req.user.id });
+            if (!user) {
+                return res.status(400).json({ message: "User not found" });
+            }
+            user.image = "";
+            const userUpdated = await UserRepositories_1.UserRepository.save(user);
+            const { password: _, ...response } = userUpdated;
+            return res.json(response);
+        }
+        if (req.file) {
+            const nameImage = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
+            const bitmap = fs_1.default.readFileSync(nameImage, 'base64');
+            fs_1.default.unlink(nameImage, () => { });
+            console.log(bitmap.length);
+            const user = await UserRepositories_1.UserRepository.findOneBy({ id: req.user.id });
+            if (!user) {
+                return res.status(400).json({ message: "User not found" });
+            }
+            user.image = bitmap;
+            const userUpdated = await UserRepositories_1.UserRepository.save(user);
+            const { password: _, ...response } = userUpdated;
+            return res.json(response);
+        }
+        return res.status(400).json({ message: "format not accepted" });
     }
     async deleteUser(req, res) {
         const id = req.user.id;
