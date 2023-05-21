@@ -45,6 +45,11 @@ export class UserController {
         if(req.body.remove == "true") {
             const user = await UserRepository.findOneBy({id: req.user.id})
             
+            if(req.file){
+                const nameImage = req.file?.path
+                fs.unlink(nameImage, () =>{})
+            }
+
             if(!user) {
                 return res.status(400).json({ message: "User not found" })
             }
