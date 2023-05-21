@@ -36,9 +36,13 @@ class UserController {
         return res.json(users);
     }
     async editImage(req, res) {
-        var _a;
+        var _a, _b;
         if (req.body.remove == "true") {
             const user = await UserRepositories_1.UserRepository.findOneBy({ id: req.user.id });
+            if (req.file) {
+                const nameImage = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
+                fs_1.default.unlink(nameImage, () => { });
+            }
             if (!user) {
                 return res.status(400).json({ message: "User not found" });
             }
@@ -48,7 +52,7 @@ class UserController {
             return res.json(response);
         }
         if (req.file) {
-            const nameImage = (_a = req.file) === null || _a === void 0 ? void 0 : _a.path;
+            const nameImage = (_b = req.file) === null || _b === void 0 ? void 0 : _b.path;
             const bitmap = fs_1.default.readFileSync(nameImage, 'base64');
             fs_1.default.unlink(nameImage, () => { });
             console.log(bitmap.length);
