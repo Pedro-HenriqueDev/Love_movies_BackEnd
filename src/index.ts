@@ -5,7 +5,7 @@ import routes from './routes'
 import cors from 'cors'
 import { celebrateErrorValidator } from './middlewares/authMiddleware'
 
-const allowedOrigins = ['https://love-movie.vercel.app'];
+const allowedOrigins = [process.env.LINK_ALLOWED] as Array<string>;
 
 const port = process.env.PORT || 3000
 
